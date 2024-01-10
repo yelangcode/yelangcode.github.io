@@ -1,0 +1,60 @@
+<p>搭建Eureka-Server服务注册中心</p>
+<pre><code class="# language-#">启动注解
+指定地址      
+</code></pre>
+<p>搭建Eureka-Client服务提供者</p>
+<pre><code class="# language-#">编写服务
+启动注解
+指定注册中心地址
+</code></pre>
+<p>Server-Consumer服务消费者</p>
+<pre><code class="# language-#">注解注册
+指定地址
+</code></pre>
+<p>Eureka集群模式</p>
+<pre><code class="# language-#">开启注册服务(注册到别的Eureka服务端，并且从别的Eureka服务端获取服务进行同步)
+指定注册中心地址
+</code></pre>
+<h2 id=""><span class="ibk">负载均衡</span></h2>
+<pre><code class="# language-#">@LoadBalanced注解的RestTemplate对象去均衡的消费服务
+</code></pre>
+<p>RestTemplate详解</p>
+<pre><code class="# language-#">RestTemplate中与GET请求对应的方法有getForEntity和getForObject。
+
+@GetMapping("user/{id:\\d+}")
+public User getUser(@PathVariable Long id) {
+    return this.restTemplate.getForEntity("http://Server-Provider/user/{name}", User.class, id).getBody();
+}
+
+发送POST请求主要有postForEntity，postForObject
+</code></pre>
+<p>Spring Cloud Ribbon配置</p>
+<pre><code class="# language-#">轮训,超时时间
+</code></pre>
+
+<script>
+    document.querySelectorAll(".hljs").forEach(function(item) {
+        item.removeAttribute("spellcheck");
+        var pre = document.createElement("pre");
+
+        while (item.firstChild) {
+            pre.appendChild(item.firstChild);
+        }
+        item.appendChild(pre);
+    });
+
+    var u_style = "color: transparent;border-bottom: 1px solid orange;align-self: flex-start;";
+
+    document.querySelectorAll(".ibk").forEach((item) => {
+        item.setAttribute("style", u_style);
+
+        item.addEventListener("click", (event) => {
+            if(item.style.color === "transparent"){
+                item.style.color = "orange";
+            }else {
+                item.style.color = "transparent";
+            }
+        })
+    })
+
+</script>
