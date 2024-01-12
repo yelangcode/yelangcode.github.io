@@ -2,21 +2,71 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        /* 改变菜单的背景颜色 */
+        .accordion {
+            background-color: #f8f9fa;
+        }
+
+        .btn-link:hover{
+            text-decoration: none; /* 去除鼠标悬停时的下划线 */
+            color: dimgray;
+        }
+
+
+
+        /* 改变菜单项的字体大小和颜色 */
+        .btn-link {
+            color: dimgray;
+            font-size: 18px;
+            padding: 0px;
+        }
+        .card-header{
+            padding: 2px 9px;
+        }
+        .card-body{
+            padding: 5px 9px;
+        }
+
+        .btn.focus, .btn:focus{
+            box-shadow: none; /* 去除按钮点击时的阴影效果 */
+        }
+
+        /* 取消点击菜单时的选中效果 */
+        .btn-link:active {
+            color: #007bff; /* 与普通状态下的颜色相同 */
+        }
+
+        a{
+            color: lightslategray;
+        }
+
+        .content {
+            width: 85%; /* 内容宽度占全屏的80% */
+            margin: 10px  auto; /* 内容居中 */
+            height: 100vh;
+            border-color: #ffffff; /* 改变边框颜色 */
+            border-width: 2px; /* 改变边框宽度 */
+            border-style: solid; /* 改变边框样式 */
+            border-radius: 10px; /* 添加圆角 */
+            padding: 10px 15px;
+        }
+    </style>
 </head>
 <body>
-<div class="accordion" id="menu">
+<div class="accordion content" id="menu">
     <div class="card">
         <div class="card-header" id="heading1">
             <h5 class="mb-0">
                 <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-                    Item 1
+                    spring-boot
                 </button>
             </h5>
         </div>
 
         <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#menu">
             <div class="card-body">
-                <a href="#">Item 1.1</a>
+                <a  href="#">Item 1.1</a>
                 <a href="#">Item 1.2</a>
             </div>
         </div>
@@ -25,13 +75,13 @@
         <div class="card-header" id="heading2">
             <h5 class="mb-0">
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                    Item 2
+                    其他
                 </button>
             </h5>
         </div>
         <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#menu">
             <div class="card-body">
-                <a href="#">Item 2.1</a>
+                <a href="./英语句子.html">英语句子</a>
                 <a href="#">Item 2.2</a>
             </div>
         </div>
@@ -40,5 +90,25 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<script>
+    // 获取所有的卡片头部元素
+var cardHeaders = document.querySelectorAll('.card-header');
+
+// 遍历所有的卡片头部元素
+for (var i = 0; i < cardHeaders.length; i++) {
+    // 为每个卡片头部元素添加点击事件
+    cardHeaders[i].addEventListener('click', function() {
+        // 获取当前卡片头部元素的下一个兄弟元素，即对应的折叠内容元素
+        var collapseElement = this.nextElementSibling;
+
+        // 切换折叠内容元素的显示状态
+        if (collapseElement.style.display === 'none') {
+            collapseElement.style.display = 'block';
+        } else {
+            collapseElement.style.display = 'none';
+        }
+    });
+}
+</script>
 </body>
 </html>
