@@ -108,8 +108,96 @@
     <span class="ibk">' 不是单词字符，所以 'i' 不会被认为是一个单独的单词，因此正则表达式 \bi\b 会匹配 'i' 中的 i。</span>
 
 
+    计算匹配的数量。 你能让它返回给定字符串中大写辅音（B、C、D、F、..、X、Y、Z）的数量,排除掉元音AEIOU
+    <span class="ibk">/(?![AEIOU])[A-Z]/g</span>或者 <span class="ibk">/[BCDFGHJKLMNPQRSTVWXYZ]/g</span>
+
+    计算数字个数 1, 2, 65, 2579, etc.
+    <span class="ibk">/\d+/g</span>
 
 
+    <code>
+        def fix_sticky_keys(text):
+        # 使用正则表达式替换连续重复的字符为单个字符
+        fixed_text = <span class="ibk">re.sub(r'(\w)\1{2,}', r'\1', text)</span>
+        fixed_text = <span class="ibk">re.sub(r'(\w)\1+', r'\1', text)</span>
+        fixed_text = <span class="ibk">re.sub(r'(.)\1+', r'\1', text)</span>
+        return fixed_text
+
+        # 测试
+        text = " Can you ppplease help me fix thhhis?"
+        fixed_text = fix_sticky_keys(text)
+        print(fixed_text)
+
+    </code>
+
+    \. :  匹配零个或一个点字符 例如 192.168.1.1 或 192.168.1.1.
+
+    <code>
+        验证 IPv4 地址的格式
+        def validate_ipv4_address():
+            ip_address = '127.0.0.1'
+            pattern = <span class="ibk">r'^((25[0-5]|(2[0-4]|1\d|[1-9])\d)\.?\b){4}$'</span>
+            pattern = <span class="ibk">r'^( ( 25[0-5] | (2[0-4]|1\d|[1-9]|) \d) \.?\b ){4}$'</span>
+            pattern = <span class="ibk">r'^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'</span>
+            pattern = <span class="ibk">r'^([0-9]+(\.|$)){4}'</span>
+            pattern = <span class="ibk">r'^(\d+(\.|$)){4}'</span>
+            pattern = <span class="ibk">r'^(\d+[\.$]){4}'</span>
+
+        re.match(pattern, ip_address):
+
+        ^(
+        (25[0-5]|(2[0-4]|1\d|[1-9]|)\d) - <span class="ibk">匹配 250-255 或 200-249 或 100-199 或 10-99 或 0-9</span>
+        (\.(?!$)|$) - <span class="ibk">匹配一个点字符，要么点后面结尾,要么没结尾</span>
+        ){4}$
+
+    </code>
+
+    <code>
+        获得html标签
+        content = '''<head><meta charset="UTF-8"><title>Title</title></head><br><a/><td class="played">0</td>'''
+        pattern = <span class="ibk">r'<\s*?(\w+).*?>'</span>
+        findall = re.findall(pattern, content)
+    </code>
+
+    <code>
+        def strip_html_tags(text):
+        # 使用正则表达式匹配 HTML 标签，并替换为空字符串
+        return re.sub(r'<span class="ibk"><[^>]*></span>', '', text)
+        return re.sub(r'<span class="ibk"><.*?></span>', '', text)
+
+        # 测试
+        html_text = <span class="ibk">"<p>This is <b>bold</b> and <i>italic</i>.</p>"</span>
+        stripped_text = strip_html_tags(html_text)
+        print(stripped_text)  # 输出: "This is bold and italic."
+    </code>
+
+    <code>
+        text = "=5 +5 -5 aa .5"
+        pattern = r'\b(.*?)\b'
+        - <span class="ibk">['', '5', '', ' +', '', '5', '', ' -', '', '5', '', ' ', '', 'aa', '', ' .', '', '5', '']</span>
+        pattern = r'\s(.*?)\s'
+
+
+    </code>
+    <code>
+
+
+        def extract_positive_integers(text):
+        # 使用正则表达式匹配字符串中的0到100的正整数，包括0和100，以及带有正号+的情况
+        pattern = <span class="ibk">r'\b(?<!-)(?:\d{1,2}|100)\b'</span>
+        positive_integers = re.findall(pattern, text)
+        return [int(num) for num in positive_integers]
+
+        # 测试
+        text = "Sam has +200 apples. He gives Todd +20 and Mary 125. The weather is -5 C today, but will be +5 C tomorrow."
+        positive_integers = extract_positive_integers(text)
+    </code>
+
+    <code>
+        # 匹配过程
+        text = "=5 +5 -5 aa .5"
+        pattern = r'\s(.*?)'
+    </code>
 </div>
 
 
