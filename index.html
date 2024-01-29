@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Beautiful Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <style>
         /* 改变菜单的背景颜色 */
@@ -14,6 +13,9 @@
             text-decoration: none; /* 去除鼠标悬停时的下划线 */
             color: dimgray;
         }
+
+
+
         /* 改变菜单项的字体大小和颜色 */
         .btn-link {
             color: dimgray;
@@ -63,14 +65,46 @@
             </h5>
         </div>
 
-
         <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#menu">
             <div class="card-body">
-                <a  href="#">Item 1.1</a>
-                <a href="#">Item 1.2</a>
+                <a  href="开启SpringBoot.html">I开启SpringBoot</a><br>
+                <a href="Spring Boot一些基础配置.html">Spring Boot一些基础配置.html</a>
             </div>
         </div>
     </div>
+    <div class="card">
+        <div class="card-header" >
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                    python
+                </button>
+            </h5>
+        </div>
+        <div class="collapse" aria-labelledby="heading2" data-parent="#menu">
+            <div class="card-body">
+                <a href="./python_bug1.html">python</a><br>
+                <a href="./markdown_img2github.html">markdown外链转图床</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" >
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                    BUG
+                </button>
+            </h5>
+        </div>
+        <div class="collapse" aria-labelledby="heading2" data-parent="#menu">
+            <div class="card-body">
+                <a href="./python_bug1.html">python</a><br>
+                <a href="./githubopt.html">关于git操作</a>
+            </div>
+        </div>
+    </div>
+
+
     <div class="card">
         <div class="card-header" id="heading2">
             <h5 class="mb-0">
@@ -81,22 +115,7 @@
         </div>
         <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#menu">
             <div class="card-body">
-                <a href="./英语句子.html">英语句子</a>
-                <a href="#">Item 2.2</a>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header" >
-            <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                    bug
-                </button>
-            </h5>
-        </div>
-        <div  class="collapse" aria-labelledby="heading2" data-parent="#menu">
-            <div class="card-body">
-                <a href="./github443.html">GitHub push失败-Failed to connect to github.com port 443_ Timed out_githubpush失败-CSDN博客</a>
+                <a href="./英语句子.html">英语句子</a><br>
                 <a href="#">Item 2.2</a>
             </div>
         </div>

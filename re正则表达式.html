@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="container">
+链接：<a href="https://juejin.cn/post/7294425916548317199">浅谈正则表达式——从原理到实战</a>
+<pre>
+<code>
+    锚点
+    ^  <span class="ibk">匹配输入字符串开始的位置。如果设置了多行匹配属性，^还会与\n 或 \r之后的位置匹配</span>
+    $  <span class="ibk">匹配输入字符串结束的位置</span>
+    <br>
+</code>
+</pre>
+
+    <pre>
+    <code>
+        量词
+        *  <span class="ibk">匹配前面的子表达式零次或多次</span>
+        +  <span class="ibk">匹配前面的子表达式一次或多次</span>
+        ?  <span class="ibk">匹配前面的子表达式零次或一次</span>
+        {n}  <span class="ibk">n是一个非负整数。匹配确定的n次</span>
+        {n,}  <span class="ibk">n是一个非负整数。至少匹配n次</span>
+        {n,m}  <span class="ibk">m和n均为非负整数，其中n<=m。最少匹配n次且最多匹配m次</span>
+        ?紧跟量词 <span class="ibk">表示非贪婪模式，尽可能少的匹配 </span>
+    </code>
+</pre>
+
+    <pre>
+    <code>
+        范围:
+        x｜y <span class="ibk">匹配x或y</span>
+        [xyz] <span class="ibk">匹配所包含的任意一个字符</span>
+        [^xyz] <span class="ibk">匹配未包含的任意字符</span>
+        [a-z]  <span class="ibk">匹配指定范围内的任意字符</span>
+        [^a-z] <span class="ibk">匹配任何不在指定范围内的任意字符</span>
+    </code>
+</pre>
+
+    <pre>
+    <code>
+        .  <span class="ibk">匹配除“\n”和"\r"之外的任何单个字符。
+           要匹配包括“\n”和"\r"在内的任何字符，请使用像“[\s\S]”的模式。</span>
+        \d	<span class="ibk">匹配一个数字字符。等价于 [0-9]</span>
+        \D	<span class="ibk">匹配一个非数字字符。等价于 [^0-9]</span>
+        \s	<span class="ibk">匹配任何空白字符，包括空格、制表符、换页符等等。等价于 [ \f\n\r\t\v]</span>
+        \S	<span class="ibk">匹配任何非空白字符。等价于 [^ \f\n\r\t\v]	</span>
+    	\w	<span class="ibk">匹配包括下划线的任何单词字符。等价于[A-Za-z0-9_]</span>
+        \W	<span class="ibk">匹配任何非单词字符。等价于 '[^A-Za-z0-9_]'</span>
+        \b	<span class="ibk">匹配一个单词边界，也就是指单词和空格间的位置</span>
+        \B	<span class="ibk">匹配非单词边界</span>
+        (pattern)	<span class="ibk">捕获型括号，匹配pattern，匹配pattern并捕获结果,自动获取组号</span>
+        (?:pattern)	<span class="ibk">非捕获型括号，匹配pattern，但不捕获匹配结果。</span>
+
+    </code>
+</pre>
+
+<pre>
+    <code>
+        用 {m,n} 来表示 *、+、?这 3 种元字符：
+        * <span class="ibk">{0,}</span>
+        + <span class="ibk">{1,}</span>
+        ? <span class="ibk">{0,1}</span>
+
+        在字符串 aaabb 中使用正则"a*"的匹配过程
+        <span class="ibk">第 1 次	0	3	到第一个字母 b 发现不满足，输出 aaa	aaa</span>
+        <span class="ibk">第 2 次	3	3	匹配剩下的 bb，发现匹配不上，输出空字符串	空字符串</span>
+        <span class="ibk">第 3 次	4	4	匹配剩下的 b，发现匹配不上，输出空字符串	空字符串</span>
+        <span class="ibk"></span>第 4 次	5	5	匹配剩下的空字符串，输出空字符串	空字符串
+
+        在字符串 aaabb 中使用正则"a*？"的匹配过程
+        <span class="ibk">---</span>
+
+        字符串"xxxyyy"的匹配过程
+        x{1,3}xy  -
+        x{1,3}?xy  -
+        x{1,3}+xy  -
+    </code>
+</pre>
+
+<pre>
+    <code>
+        环视：
+        (?<=……)	 <span class="ibk">子表达式能够匹配左侧文本</span>
+        (?<!……)	 <span class="ibk">子表达式不能匹配左侧文本</span>
+        (?=……)	 <span class="ibk">子表达式能够匹配右侧文本</span>
+        (?!……)	 <span class="ibk">子表达式不能匹配右侧文本</span>
+    </code>
+</pre>
+
+<pre>
+    <code>
+        匹配模式
+        i	<span class="ibk">执行对大小写不敏感的匹配</span>
+        g	<span class="ibk">执行全局匹配（查找所有匹配而非在找到第一个匹配后停止）</span>
+        m	<span class="ibk">执行多行匹配</span>
+        s	<span class="ibk">允许 . 匹配换行符</span>
+        u	<span class="ibk">使用 unicode 码的模式进行匹配</span>
+        y	<span class="ibk">执行“粘性”搜索，匹配从目标字符串的当前位置开始</span>
+    </code>
+</pre>
+
+   * 为什么 \bi\b 能匹配 i'm - <span class="ibk">\bi\b 使用的是单词边界匹配，\b 表示单词的边界。但在这种情况下，</span>
+    <span class="ibk">' 不是单词字符，所以 'i' 不会被认为是一个单独的单词，因此正则表达式 \bi\b 会匹配 'i' 中的 i。</span>
+
+
+    计算匹配的数量。 你能让它返回给定字符串中大写辅音（B、C、D、F、..、X、Y、Z）的数量,排除掉元音AEIOU
+    <span class="ibk">/(?![AEIOU])[A-Z]/g</span>或者 <span class="ibk">/[BCDFGHJKLMNPQRSTVWXYZ]/g</span>
+
+    计算数字个数 1, 2, 65, 2579, etc.
+    <span class="ibk">/\d+/g</span>
+
+
+    <code>
+        def fix_sticky_keys(text):
+        # 使用正则表达式替换连续重复的字符为单个字符
+        fixed_text = <span class="ibk">re.sub(r'(\w)\1{2,}', r'\1', text)</span>
+        fixed_text = <span class="ibk">re.sub(r'(\w)\1+', r'\1', text)</span>
+        fixed_text = <span class="ibk">re.sub(r'(.)\1+', r'\1', text)</span>
+        return fixed_text
+
+        # 测试
+        text = " Can you ppplease help me fix thhhis?"
+        fixed_text = fix_sticky_keys(text)
+        print(fixed_text)
+
+    </code>
+
+    \. :  匹配零个或一个点字符 例如 192.168.1.1 或 192.168.1.1.
+
+    <code>
+        验证 IPv4 地址的格式
+        def validate_ipv4_address():
+            ip_address = '127.0.0.1'
+            pattern = <span class="ibk">r'^((25[0-5]|(2[0-4]|1\d|[1-9])\d)\.?\b){4}$'</span>
+            pattern = <span class="ibk">r'^( ( 25[0-5] | (2[0-4]|1\d|[1-9]|) \d) \.?\b ){4}$'</span>
+            pattern = <span class="ibk">r'^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'</span>
+            pattern = <span class="ibk">r'^([0-9]+(\.|$)){4}'</span>
+            pattern = <span class="ibk">r'^(\d+(\.|$)){4}'</span>
+            pattern = <span class="ibk">r'^(\d+[\.$]){4}'</span>
+
+        re.match(pattern, ip_address):
+
+        ^(
+        (25[0-5]|(2[0-4]|1\d|[1-9]|)\d) - <span class="ibk">匹配 250-255 或 200-249 或 100-199 或 10-99 或 0-9</span>
+        (\.(?!$)|$) - <span class="ibk">匹配一个点字符，要么点后面结尾,要么没结尾</span>
+        ){4}$
+
+    </code>
+
+    <code>
+        获得html标签
+        content = '''<head><meta charset="UTF-8"><title>Title</title></head><br><a/><td class="played">0</td>'''
+        pattern = <span class="ibk">r'<\s*?(\w+).*?>'</span>
+        findall = re.findall(pattern, content)
+    </code>
+
+    <code>
+        def strip_html_tags(text):
+        # 使用正则表达式匹配 HTML 标签，并替换为空字符串
+        return re.sub(r'<span class="ibk"><[^>]*></span>', '', text)
+        return re.sub(r'<span class="ibk"><.*?></span>', '', text)
+
+        # 测试
+        html_text = <span class="ibk">"<p>This is <b>bold</b> and <i>italic</i>.</p>"</span>
+        stripped_text = strip_html_tags(html_text)
+        print(stripped_text)  # 输出: "This is bold and italic."
+    </code>
+
+    <code>
+        text = "=5 +5 -5 aa .5"
+        pattern = r'\b(.*?)\b'
+        - <span class="ibk">['', '5', '', ' +', '', '5', '', ' -', '', '5', '', ' ', '', 'aa', '', ' .', '', '5', '']</span>
+        pattern = r'\s(.*?)\s'
+
+
+    </code>
+    <code>
+
+
+        def extract_positive_integers(text):
+        # 使用正则表达式匹配字符串中的0到100的正整数，包括0和100，以及带有正号+的情况
+        pattern = <span class="ibk">r'\b(?<!-)(?:\d{1,2}|100)\b'</span>
+        positive_integers = re.findall(pattern, text)
+        return [int(num) for num in positive_integers]
+
+        # 测试
+        text = "Sam has +200 apples. He gives Todd +20 and Mary 125. The weather is -5 C today, but will be +5 C tomorrow."
+        positive_integers = extract_positive_integers(text)
+    </code>
+
+    <code>
+        # 匹配过程
+        text = "=5 +5 -5 aa .5"
+        pattern = r'\s(.*?)'
+    </code>
+</div>
+
+
+</body>
+
+<link href="style/styles.css" rel="stylesheet">
+<script src="js/script.js"></script>
+
+</html>

@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>将md外链转化成github图床</title>
+</head>
+<body>
+<div class="container">
+    <pre>
+        <code>
+import uuid
+
+import requests
+import re
+import requests
+from github import Github
+from github import Auth
+
+# 读取markdown文件,找到所有的图片链接
+def read_md_file(file_name):
+    try:
+        with open(file_name, "r", encoding="utf-8") as file:
+            return file.read()
+    except Exception as e:
+        print("error", e)
+
+def write_md_file(file_name, content):
+    with open(file_name, "w", encoding="utf-8") as file:
+        file.write(content)
+
+
+def find_img_link(md_content):
+    return re.findall(r"!\[.*\]\((.*)\)", md_content)
+
+
+
+# 通过链接下载图片
+def download_img(img_url):
+    try:
+        return requests.get(img_url).content
+    except Exception as e:
+        print("error", e)
+
+# 将数据上传到github
+def upload_img_to_github(img_data):
+    try:
+        g = Github("[token]")
+        repo = g.get_repo("yelangcode/pictures")
+        # uuid随机文件名
+        filename= str(uuid.uuid4())
+        repo.create_file(f"{filename}.jpg", "test", img_data, branch="main")
+        return f"https://raw.githubusercontent.com/yelangcode/pictures/main/{filename}.jpg"
+    except Exception as e:
+        print("error", e)
+
+def img_link_replace():
+    md_content = read_md_file("redme.md")
+    links = find_img_link(md_content)
+    for link in links:
+        img_data = download_img(link)
+        github_url = upload_img_to_github(img_data)
+        md_content = md_content.replace(link, github_url)
+    write_md_file("redme.md", md_content)
+
+
+
+img_link_replace()
+
+
+        </code>
+    </pre>
+</div>
+</body>
+
+<link   href="style/styles.css" rel="stylesheet">
+<script src="js/script.js"></script>
+
+</html>
