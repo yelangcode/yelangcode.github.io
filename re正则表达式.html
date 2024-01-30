@@ -180,10 +180,9 @@
 
     </code>
     <code>
-
-
         def extract_positive_integers(text):
         # 使用正则表达式匹配字符串中的0到100的正整数，包括0和100，以及带有正号+的情况
+
         pattern = <span class="ibk">r'\b(?<!-)(?:\d{1,2}|100)\b'</span>
         positive_integers = re.findall(pattern, text)
         return [int(num) for num in positive_integers]
@@ -196,7 +195,54 @@
     <code>
         # 匹配过程
         text = "=5 +5 -5 aa .5"
+        text = \s(.*?)(?=\s|$)
+        text = (\+\S+)
         pattern = r'\s(.*?)'
+    </code>
+
+    <code>
+        "Visit oUr aABC AT MD" 匹配大写单词 例如  AT,MD  -- \b[[:upper:]]+\b
+
+         "Visit oUr aABC AT http://www.example.com,"   匹配URL 例如  http://www.example.com
+         - <span class="ibk">(http.*?com) , (h\S+com)</span>
+
+        The price is $10.99, and the discount is 15%."  匹配数字 例如 10.99, 15
+         - (\d+[\.\d+]\d*)
+
+        The price is $10.99, and the discount is 15%." -  匹配数字 例如  $10.99  15%
+         - (\S+[%\d])
+
+        要过滤长度为35个字符的URL
+        ^.{35}$
+
+        123-456 替换 "456-123"
+        "123-456".replace(
+        /(\d+)-(\d+)/, // searchValue
+        "$2-$1" // replaceValue, $1、$2 等价于上文的 \1、\2
+        )
+        // Output => "456-123"
+
+    </code>
+
+    <code>
+        反向引用 (back referencing)，或者回溯引用，是指通过 \0、\1、\2 这样的变量形式来引用模式中已经匹配到的部分。\0 表示整个模式匹配到的文本，\1 表示捕获的第一个组、\2 表示捕获的第二个组
+
+        匹配两个连续的相同单词 	hello hello world	- > hello hello
+        ((\w+) \2)
+    </code>
+
+    <code>
+        所有表示重复的元字符都可以转化为懒惰匹配模式：
+
+        *?：重复任意次，但尽可能少重复
+        +?：重复 1 次或更多次，但尽可能少重复
+        ??：重复 0 次或 1 次，但尽可能少重复
+        {n,m}?：重复 n 到 m 次，但尽可能少重复
+        {n,}?：重复 n 次或更多次，但尽可能少重复
+
+        123000, 1200, 178 => 123 12 178
+        默认情况下，正则表达式是贪婪匹配，所以 \d+ 总是尽可能多地向后匹配，将后面的 0 也包含进来。
+        将模式改为非贪婪匹配：(\d+?)0*$，就可以让 \d+ 尽可能少匹配，让 0* 尽可能多匹配。
     </code>
 </div>
 
