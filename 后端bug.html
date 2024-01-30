@@ -5,33 +5,70 @@
 </head>
 <body>
 <div class="container">
-    <h1>句子</h1>
-
-
-    <pre class="codex">
-    <code class="# language-#">
- Each person you see here has their own story of his selflessness, generosity, good citizenship
- <span class="ibk">每个人都有自己关于无私、慷慨和良好公民行为的故事</span>
-
-"Each person you see here" - <span class="ibk">这是指在你看到的每一个人</span>。
-"has their own story" - <span class="ibk">意味着每个人都有自己的故事</span>。
-"of his selflessness, generosity, good citizenship" - <span class="ibk">指的是这些故事都涉及到他们的无私、慷慨和良好的公民行为。</span>
+    <h3>文件上传和下载</h3>
+    <code>
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        axios.post('http://localhost:8888/outputErr', formData, {responseType: 'blob'})
+            .then(response => {
+            console.log(response.data);
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'file.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            // 下载完成后释放资源
+            window.URL.revokeObjectURL(url);
+            // 如果需要上传后的操作，可以在这里添加
+        })
+        .catch(error => {
+        console.error('Error uploading file:', error);
+        });
     </code>
-</pre>
 
-    <pre>
-<code>
-Federal law bars sex discrimination at any school that receives federal money.
-<span class="ibk">联邦法律禁止任何接受联邦资助的学校进行性别歧视。</span>
-bars sex discrimination - <span class="ibk">禁止性别歧视</span>
-</code>
-</pre>
+    <code>
+        @RequestMapping("/outputErrFile")
+        @ResponseBody
+        @CrossOrigin
+        public void outputErrFile(MultipartFile file, HttpServletResponse res) throws IOException {
+            List metaDatas = new ArrayList<>();
+
+            ExcelUtil.read(file, UserInfo.class, (data) -> {
+            File outfile = ExcelUtil.write2File(UserInfo.class, data);
+            ExcelUtil.responseWrite(res, outfile);
+            }, ValidaMode.FAIL_SILENTLY);
+            }
+
+            @SneakyThrows
+            public static void responseWrite(HttpServletResponse response, File file) {
+
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(file));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + file.getName());
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+
+        }
+    </code>
+
 
 </div>
 
 </body>
 
-<link   href="style/styles.css" rel="stylesheet">
+<link href="style/styles.css" rel="stylesheet">
 <script src="js/script.js"></script>
 
 </html>
