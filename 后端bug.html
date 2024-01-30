@@ -31,6 +31,7 @@
     <code>
         @RequestMapping("/outputErrFile")
         @ResponseBody
+        @CrossOrigin
         public void outputErrFile(MultipartFile file, HttpServletResponse res) throws IOException {
             List metaDatas = new ArrayList<>();
 
