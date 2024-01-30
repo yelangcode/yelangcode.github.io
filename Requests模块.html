@@ -174,7 +174,161 @@
       print(response.text)
 
      </code>
+        <code>
+            检测响应状态码
+            >>> r = requests.get('http://httpbin.org/get')
+            >>> r.<span class="ibk">status_code</span>
+            如果发送了一个错误请求(一个 4XX 客户端错误，或者 5XX 服务器错误响应)，我们可以通过 Response.<span class="ibk">raise_for_status</span>() 来抛出异常
 
+            一个 Python 字典形式展示的服务器响应头
+             r.<span class="ibk">headers</span>
+                {
+                    'content-encoding': 'gzip',
+                    'transfer-encoding': 'chunked',
+                    'connection': 'close',
+                    'server': 'nginx/1.0.4',
+                    'x-runtime': '148ms',
+                    'etag': '"e1ca502697e5c9317743dc078f67693f"',
+                    'content-type': 'application/json'
+                }
+             r.<span class="ibk">headers['Content-Type']</span> 或者 r.<span class="ibk">headers.get('content-type')</span>
+            'application/json'
+
+        </code>
+        <code>
+            如果某个响应中包含一些 cookie，你可以快速访问它们： r.<span class="ibk">cookies</span>['example_cookie_name']
+            >>> url = 'http://example.com/some/cookie/setting/url'
+            >>> r = requests.get(url)
+            >>> r.<span class="ibk">cookies['example_cookie_name']</span>
+            'example_cookie_value'
+
+            要想发送你的cookies到服务器，可以使用 cookies 参数：
+            >>> url = 'http://httpbin.org/cookies'
+            >>> cookies = <span class="ibk">dict(cookies_are='working')</span>
+            >>> r = requests.get(url, <span class="ibk">cookies=cookies</span>)
+            >>> r.text
+            '{"cookies": {"cookies_are": "working"}}'
+
+
+            更为完整，适合跨域名跨路径使用COOKIE
+            >>> jar = requests.cookies.<span class="ibk">RequestsCookieJar</span>()
+            >>> jar.set('tasty_cookie', 'yum', domain='httpbin.org', path='/cookies')
+            >>> jar.set('gross_cookie', 'blech', domain='httpbin.org', path='/elsewhere')
+            >>> url = 'http://httpbin.org/cookies'
+            >>> r = requests.get(url, <span class="ibk">cookies=jar</span>)
+            >>> r.text
+        </code>
+        <code>
+            用响应对象的 <span class="ibk">history</span> 方法来追踪重定向
+            Github 将所有的 HTTP 请求重定向到 HTTPS：
+            >>> r = requests.get('http://github.com')
+            >>> r.url
+            'https://github.com/'
+            >>> r.status_code
+            200
+            >>> r.history
+            [<Response [301]>]
+
+            使用的是GET、OPTIONS、POST、PUT、PATCH 或者 DELETE，那么你可以通过 <span class="ibk">allow_redirects</span> 参数禁用重定向处理：
+            >>> r = requests.get('http://github.com', <span class="ibk">allow_redirects=False</span>)
+
+            使用了 HEAD，你也可以启用重定向：
+            >>> r = requests.head('http://github.com', <span class="ibk">allow_redirects=True</span>)
+
+        </code>
+        <code>
+             timeout 参数设定的秒数时间之后停止等待响应
+              >>> requests.get('http://github.com', <span class="ibk">timeout=0.001</span>)
+                Traceback (most recent call last):
+        </code>
+        
+        <code>
+            遇到网络问题（如：DNS 查询失败、拒绝连接等）时，Requests 会抛出一个 ConnectionError 异常。买你家门口呢，
+            如果 HTTP 请求返回了不成功的状态码， Response.raise_for_status() 会抛出一个 HTTPError 异常。
+            若请求超时，则抛出一个 Timeout 异常。
+            若请求超过了设定的最大重定向次数，则会抛出一个 TooManyRedirects 异常。
+            所有Requests显式抛出的异常都继承自 requests.exceptions.RequestException 。
+        </code>
+        <code>
+            同一个 Session 实例发出的所有请求之间保持 cookie
+            跨请求保持一些 cookie:
+            s = requests.<span class="ibk">Session</span>()
+            s.get('http://httpbin.org/cookies/set/sessioncookie/123456789')
+            r = s.get("http://httpbin.org/cookies")
+            print(r.text)
+            # '{"cookies": {"sessioncookie": "123456789"}}'
+
+            为请求方法提供缺省数据
+            s = requests.Session()
+            s.auth = ('user', 'pass')
+            s.headers.update({'x-test': 'true'})
+            # both 'x-test' and 'x-test2' are sent
+            s.get('http://httpbin.org/headers', headers={'x-test2': 'true'})
+
+        </code>
+        <code>
+            响应头部信息
+            >>> r = requests.get('http://example.com/some/cookie/setting/url')
+            >>> r.<span class="ibk">headers</span>
+            请求的头部
+            >>> r.<span class="ibk">request.headers</span>
+
+        </code>
+        <code>
+            要获取一个带有状态的 <span class="ibk">PreparedRequest</span>， 请用 Session.<span class="ibk">prepare_request</span>() 取代 Request.prepare()
+            from requests import Request, Session
+
+            # 创建一个会话对象
+            s = Session()
+
+            # 创建一个 HTTP 请求对象，指定请求的方法、URL、数据和请求头
+            req = <span class="ibk">Request</span>('GET', url,
+                data=data,
+                headers=headers
+            )
+
+            # 准备请求，将请求对象转换为准备就绪的请求对象
+            prepped = s.<span class="ibk">prepare_request</span>(req)
+
+            # 在发送请求之前，可以对请求的主体和请求头进行一些处理
+            # 例如打印请求的主体和请求头的内容，或者修改它们
+            print("Request body:", prepped.body)
+            print("Request headers:", prepped.headers)
+
+            # 使用会话对象发送准备好的请求，获取响应
+            resp = s.<span class="ibk">send</span>(prepped,
+                stream=stream,    # 是否以数据流的方式发送请求
+                verify=verify,    # 是否验证服务器的 SSL 证书
+                proxies=proxies,  # 代理服务器
+                cert=cert,        # SSL 证书
+                timeout=timeout   # 请求超时时间
+            )
+
+            # 打印响应状态码
+            print("Response status code:", resp.status_code)
+        </code>
+        <code>
+            如果SSL证书验证失败，Requests 会抛出 SSLError:
+            可以为 <span class="ibk">verify</span> 传入 CA_BUNDLE 文件的路径，或者包含可信任 CA 证书文件的文件夹路径：
+             requests.get('https://github.com', <span class="ibk">verify</span>='/path/to/certfile')
+            将其保持在会话中：
+            s = <span class="ibk">requests.Session()</span>
+            s.<span class="ibk">verify</span> = '/path/to/certfile'
+            如果 <span class="ibk">verify</span> 设为文件夹路径，文件夹必须通过 OpenSSL 提供的 c_rehash 工具处理。
+            你还可以通过 REQUESTS_CA_BUNDLE 环境变量定义可信任 CA 列表。
+        </code>
+        <code>
+            指定一个本地证书用作客户端证书，可以是单个文件（包含密钥和证书）或一个包含两个文件路径的元组：
+            requests.get('https://kennethreitz.com', <span class="ibk">cert=('/path/client.cert', '/path/client.key')</span>)
+            或者保持在会话中：
+            s = <span class="ibk">requests.Session()</span>
+            s.<span class="ibk">cert</span> = '/path/client.cert'
+            指定了一个错误路径或一个无效的证书:
+            requests.exceptions.SSLError: [Errno 336265225] _ssl.c:347: error:140B0009:SSL routines:SSL_CTX_use_PrivateKey_file:PEM lib
+            本地证书的私有 key 必须是解密状态。目前，Requests 不支持使用加密的 key。
+
+
+        </code>
 
     </pre>
 
