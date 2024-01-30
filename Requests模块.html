@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Requests 模块</title>
+</head>
+<body>
+<div class="container">
+
+    <pre><br>
+   发送一个 HTTP POST 请求  参数{'key':'value'}
+    r = requests.<span class="ibk">post('http://httpbin.org/post', data = {'key':'value'})</span>
+
+    传递 key1=value1 和 key2=value2 到 httpbin.org/get
+    ->http://httpbin.org/get?key2=value2&key1=value1
+     payload = {'key1': 'value1', 'key2': 'value2'}
+     r = requests.<span class="ibk">get("http://httpbin.org/get", params=payload)</span>
+
+     列表传参
+     http://httpbin.org/get?key1=value1&key2=value2&key2=value3
+     payload = {'key1': 'value1', 'key2': <span class="ibk">['value2', 'value3']</span>}
+     r = requests.<span class="ibk">get("http://httpbin.org/get", params=payload)</span>
+     print(r.url)
+        
+    Requests 会基于 HTTP 头部对响应的编码作出有根据的推测。
+    当你访问 .<span class="ibk">text</span> 之时，Requests 会使用其推测的文本编码。
+    使用 <span class="ibk">r.content</span> 来找到编码，然后设置 <span class="ibk">r.encoding</span> 为相应的编码。这样就能使用正确的编码解析 <span
+                class="ibk">r.text</span> 了
+    如果你创建了自己的编码，并使用 codecs 模块进行注册
+
+    以请求返回的二进制数据创建一张图片
+    from PIL import Image
+    from io import BytesIO
+    <span class="ibk">i = Image.open(BytesIO(r.content))</span>
+
+    处理 JSON 数据
+    r = requests.get('https://api.github.com/events')
+    r.<span class="ibk">json()</span>
+    要检查请求是否成功，请使用 r.<span class="ibk">raise_for_status()</span> 或者检查 r.<span
+                class="ibk">status_code</span> 是否和你的期望相同
+
+    获取来自服务器的原始套接字响应，那么你可以访问 r.raw。如果你确实想这么干，那请你确保在初始请求中设置了 <span
+                class="ibk">stream=True</span>。具体你可以这么做：
+     r = requests.get('https://api.github.com/events', <span class="ibk">stream=True</span>)
+     r.<span class="ibk">raw</span>
+     r.<span class="ibk">raw.read(10)</span> # 读取前10个字节
+     # 将文本流保存到文件
+        with open(filename, 'wb') as fd:
+            for chunk in <span class="ibk">r.iter_content(chunk_size=128)</span>:
+                fd.write(chunk)
+
+     请求添加 HTTP 头部，只要简单地传递一个 dict 给 <span class="ibk">headers</span> 参数就可以了
+      url = 'https://api.github.com/some/endpoint'
+      headers = {'user-agent': 'my-app/0.0.1'}
+      r = requests.get(url, <span class="ibk">headers=headers</span>)
+     注意: 定制 header 的优先级低于某些特定的信息源，例如：
+
+     如果在 .netrc 中设置了用户认证信息，使用 <span class="ibk">headers=</span> 设置的授权就不会生效。而如果设置了 auth= 参数，``.netrc`` 的设置就无效了。
+     如果被重定向到别的主机，授权 <span class="ibk">header</span> 就会被删除。
+     代理授权 <span class="ibk">header</span> 会被 URL 中提供的代理身份覆盖掉。
+     在我们能判断内容长度的情况下，<span class="ibk">header</span> 的 Content-Length 会被改写。
+
+     发送一些编码为表单形式的数据
+     <code>
+       >>> payload = {'key1': 'value1', 'key2': 'value2'}
+
+       >>> r = requests.post("http://httpbin.org/post", <span class="ibk">data=payload</span>)
+       >>> print(r.text)
+       {
+       ...
+       "form": {
+       "key2": "value2",
+       "key1": "value1"
+       },
+       ...
+       }
+     </code>
+
+     在表单中多个元素使用同一 key 的时候
+     <code>
+       >>> payload = <span class="ibk">(('key1', 'value1'), ('key1', 'value2'))</span>
+      >>> r = requests.post('http://httpbin.org/post', <span class="ibk">data=payload</span>)
+      >>> print(r.text)
+      {
+      ...
+      "form": {
+      "key1": [
+       "value1",
+       "value2"
+      ]
+      },
+      ...
+      }
+     </code>
+     
+     传递一个 string 而不是一个 dict
+     <code>
+         >>> import json
+
+        >>> url = 'https://api.github.com/some/endpoint'
+        >>> payload = {'some': 'data'}
+
+        >>> r = requests.post(url, <span class="ibk">data=json.dumps(payload)</span>)
+     </code>
+
+     上传多部分编码文件变得很简单
+     <code>
+       >>> url = 'http://httpbin.org/post'
+       >>> files = <span class="ibk">{'file': open('report.xls', 'rb')}</span>
+
+       >>> r = requests.post(url, <span class="ibk">files=files</span>)
+       >>> r.text
+       {
+       ...
+       "files": {
+            "file": "<censored...binary...data>"
+       },
+       ...
+       }
+     </code>
+
+     以显式地设置文件名，文件类型和请求头：发送请求
+     <code>
+       >>> url = 'http://httpbin.org/post'
+       >>> files = <span class="ibk">{'file': ('report.xls', open('report.xls', 'rb'), 'application/vnd.ms-excel', {'Expires': '0'})}</span>
+
+       >>> r = requests.post(url, <span class="ibk">files=files</span>)
+       >>> r.text
+       {
+       ...
+       "files": {
+          "file": "<censored...binary...data>"
+       },
+       ...
+       }
+     </code>
+
+     <code>
+     发送作为文件来接收的字符串
+     >>> url = 'http://httpbin.org/post'
+     csv_string = 'some,data,to,send\nanother,row,to,send\n'
+     >>> files = <span class="ibk">{'file': ('report.csv', csv_string)}</span>
+
+     >>> r = requests.post(url, s<span class="ibk">files=files</span>)
+     >>> r.text
+     {
+     ...
+     "files": {
+        "file": "some,data,to,send\\nanother,row,to,send\\n"
+     },
+     ...
+     }
+
+     </code>
+
+     <code>
+      发送大文件作为数据流
+      from requests_toolbelt.multipart.encoder import MultipartEncoder
+      import requests
+
+      # 设置要上传的文件路径
+      file_path = 'path/to/your/large/file.txt'
+
+      # 创建一个 <span class="ibk">MultipartEncoder</span> 对象来编码文件和其他字段
+      encoder = <span class="ibk">MultipartEncoder(fields={'file': ('filename.txt', open(file_path, 'rb'))})</span>
+
+      # 设置请求头，指定内容类型为 <span class="ibk">multipart/form-data</span>，并提供编码器的边界
+      headers = <span class="ibk">{'Content-Type': encoder.content_type}</span>
+
+      # 发送请求
+      response = requests.post('http://example.com/upload', data=encoder, headers=headers)
+
+      # 处理响应
+      print(response.text)
+
+     </code>
+
+
+    </pre>
+
+</div>
+</body>
+
+<link href="style/styles.css" rel="stylesheet">
+<script src="js/script.js"></script>
+
+
+</html>
