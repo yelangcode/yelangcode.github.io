@@ -40,7 +40,7 @@ Java 线程（Thread）有以下几种状态：
 
 是否有其他方式可以实现线程同步而不使用同步控制块？
 <code class="ibk">
-    volatile关键字：volatile关键字可以确保变量的可见性，当一个变量被声明为volatile之后，意味着线程每次访问变量时都会读取变量修改后的最新值。虽然volatile不执行互斥访问，但它可以保证任何一个线程在读变量时都能看到最新写入的值。
+    volatile关键字：=volatile关键字可以确保变量的可见性，当一个变量被声明为volatile之后，意味着线程每次访问变量时都会读取变量修改后的最新值。虽然volatile不执行互斥访问，但它可以保证任何一个线程在读变量时都能看到最新写入的值。
     **锁 (Locks)**：Java java.util.concurrent.locks包提供了比synchronized关键字更加复杂的锁机制。比如ReentrantLock，它具有完全互斥的锁定机制，还支持条件变量，能实现更细粒度的线程同步控制。
     **原子变量(java.util.concurrent.atomic)**：该包提供了一系列的原子操作类，例如AtomicInteger，AtomicLong，AtomicReference等，这些类使得执行单一操作的变量更新成为原子操作，进而可以在没有锁的情况下实现线程安全。
     **条件变量 (Condition)**：条件变量提供了一种线程之间协调通信的方式。比如，通过ReentrantLock创建一个Condition，线程可以在某个条件变量上调用await()方法进入等待状态，直到其他线程在该条件变量上调用signal()或signalAll()方法唤醒等待的线程。
